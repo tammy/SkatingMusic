@@ -1,20 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
 import { Audio } from "expo-av";
-import { Alert } from "react-native";
 
 export const useAudioPlayer = (file?: any) => {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0); // Current playback time in seconds
+  const [duration, setDuration] = useState(0); // Total duration of the audio in seconds
 
+  // Configure audio mode and load the sound file
   const loadSound = useCallback(async () => {
-    if (!file) {
-      console.log("No audio file provided");
-      return;
-    }
+    if (!file) return;
 
     setIsLoading(true);
     try {
+      // Set audio mode before loading sound
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: false,
         staysActiveInBackground: false,
@@ -22,15 +22,22 @@ export const useAudioPlayer = (file?: any) => {
         shouldDuckAndroid: true,
         playThroughEarpieceAndroid: false,
       });
-      console.log("Trying to load file");
-      const { sound } = await Audio.Sound.createAsync(file, {
+
+      const { sound, status } = await Audio.Sound.createAsync(file, {
         shouldPlay: false,
       });
-      console.log("Sound loaded successfully");
       setSound(sound);
+      setDuration(status.durationMillis / 1000); // Set duration in seconds
+
+      // Update progress as playback proceeds
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded) {
+          setProgress(status.positionMillis / 1000); // Update progress in seconds
+          setIsPlaying(status.isPlaying);
+        }
+      });
     } catch (error) {
       console.error("Error loading sound:", error);
-      Alert.alert("Error", `Error loading sound: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -40,14 +47,11 @@ export const useAudioPlayer = (file?: any) => {
   const playSound = useCallback(async () => {
     if (!sound) return;
 
-    setIsLoading(true); // Set loading while attempting to play
     try {
       await sound.playAsync();
       setIsPlaying(true);
     } catch (error) {
       console.error("Error playing sound:", error);
-    } finally {
-      setIsLoading(false); // Reset loading state
     }
   }, [sound]);
 
@@ -70,12 +74,28 @@ export const useAudioPlayer = (file?: any) => {
     try {
       await sound.stopAsync();
       setIsPlaying(false);
+      setProgress(0); // Reset progress to the start
     } catch (error) {
       console.error("Error stopping sound:", error);
     }
   }, [sound]);
 
-  // Cleanup to unload the sound when component unmounts
+  // Seek to a specific position in seconds
+  const seekTo = useCallback(
+    async (seconds: number) => {
+      if (!sound) return;
+
+      try {
+        await sound.setPositionAsync(seconds * 1000); // Convert seconds to milliseconds
+        setProgress(seconds); // Update progress state
+      } catch (error) {
+        console.error("Error seeking sound:", error);
+      }
+    },
+    [sound]
+  );
+
+  // Load sound on component mount
   useEffect(() => {
     loadSound();
 
@@ -90,5 +110,8 @@ export const useAudioPlayer = (file?: any) => {
     playSound,
     pauseSound,
     stopSound,
+    seekTo,
+    progress,
+    duration,
   };
 };

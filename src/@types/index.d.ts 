@@ -2,6 +2,6 @@ export interface Program {
   id: string;
   title: string;
   level: string;
-  events: list;
+  events: string[];
   file: string;
 }

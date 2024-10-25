@@ -1,46 +1,84 @@
-// app/programs/[id].tsx
-import { useGlobalSearchParams } from "expo-router";
-import { View, Text, Button, ActivityIndicator } from "react-native";
-import { programs } from "@/src/data/programs";
-import { Program } from "@/src/@types";
-import { useAudioPlayer } from "@/src/hooks/useAudioPlayer";
+import { ActivityIndicator, Image } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { programs } from "../../src/data/programs";
+import { useAudioPlayer } from "../../src/hooks/useAudioPlayer";
 import { ThemedText } from "@/src/components/ThemedText";
 import { ThemedView } from "@/src/components/ThemedView";
+import { FontAwesome } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
 
 export default function ProgramScreen() {
-  const { id } = useGlobalSearchParams();
-  const program = programs.find((p) => p.id === id) as Program | undefined;
+  const { id } = useLocalSearchParams();
+  const program = programs.find((p) => p.id === id);
 
-  if (program === undefined || program.file === undefined) {
-    return (
-      <ThemedView className="flex-1 items-center justify-center p-4 bg-white">
-        <ThemedText className="text-2xl font-bold">
-          Program with id {id} not found
-        </ThemedText>
-      </ThemedView>
-    );
-  }
+  const {
+    isPlaying,
+    isLoading,
+    playSound,
+    pauseSound,
+    stopSound,
+    seekTo,
+    progress,
+    duration,
+  } = useAudioPlayer(program?.file);
 
-  const { isPlaying, isLoading, playSound, pauseSound, stopSound } =
-    useAudioPlayer(program.file);
-
-  if (!program) return <Text>Program not found</Text>;
+  if (!program) return <ThemedText>Program not found</ThemedText>;
 
   return (
-    <ThemedView className="flex-1 items-center justify-center p-4 bg-white">
-      <ThemedText className="text-2xl font-bold">{program.title}</ThemedText>
-      <ThemedText className="text-lg text-gray-600">{program.level}</ThemedText>
+    <ThemedView className="flex-1 items-center justify-center p-4">
+      {/* Album Art */}
+      <Image
+        source={require("../../assets/images/placeholder-album.png")} // Placeholder image
+        style={{ width: 300, height: 300, borderRadius: 10, marginBottom: 20 }}
+      />
+
+      {/* Track Title & Artist */}
+      <ThemedText className="text-2xl font-bold mb-1">
+        {program.title}
+      </ThemedText>
+      <ThemedText className="text-lg text-gray-600 mb-6">
+        {program.artist}
+      </ThemedText>
+
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#1EB1FC" />
       ) : (
-        <View>
-          <Button
-            title={isPlaying ? "Pause" : "Play"}
-            onPress={isPlaying ? pauseSound : playSound}
+        <ThemedView className="w-3/4 items-center">
+          {/* Progress Bar */}
+          <Slider
+            style={{ width: "100%", height: 40 }}
+            minimumValue={0}
+            maximumValue={duration}
+            value={progress}
+            minimumTrackTintColor="#1EB1FC"
+            maximumTrackTintColor="#d3d3d3"
+            thumbTintColor="#1EB1FC"
+            onSlidingComplete={seekTo}
           />
-          <Button title="Stop" onPress={stopSound} />
-        </View>
+          <ThemedView className="flex-row justify-between w-full">
+            <ThemedText>{formatTime(progress)}</ThemedText>
+            <ThemedText>{formatTime(duration)}</ThemedText>
+          </ThemedView>
+
+          {/* Playback Controls */}
+          <ThemedView className="flex-row items-center justify-center mt-6 space-x-14">
+            <FontAwesome.Button
+              name={isPlaying ? "pause" : "play"}
+              backgroundColor="transparent"
+              color="#1EB1FC"
+              size={50}
+              onPress={isPlaying ? pauseSound : playSound}
+            />
+          </ThemedView>
+        </ThemedView>
       )}
     </ThemedView>
   );
+}
+
+// Helper function to format time (mm:ss)
+function formatTime(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
 }
