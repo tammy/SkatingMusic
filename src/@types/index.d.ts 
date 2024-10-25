@@ -1,0 +1,7 @@
+export interface Program {
+  id: string;
+  title: string;
+  level: string;
+  events: list;
+  file: string;
+}
