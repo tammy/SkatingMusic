@@ -1,4 +1,4 @@
-import { Program } from "../@types";
+import { Program } from "@/src/@types";
 
 export const programs: Program[] = [
   {
@@ -6,6 +6,6 @@ export const programs: Program[] = [
     title: "Death approaches",
     level: "Adult Bronze",
     events: [],
-    file: require("../../assets/audio/Death Approaches.mp3"),
+    file: require("../../assets/audio/Death_Approaches.mp3"),
   },
 ];
