@@ -1,5 +1,5 @@
 import { ActivityIndicator, Image } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Stack } from "expo-router";
 import { programs } from "../../src/data/programs";
 import { useAudioPlayer } from "../../src/hooks/useAudioPlayer";
 import { ThemedText } from "@/src/components/ThemedText";
@@ -16,7 +16,6 @@ export default function ProgramScreen() {
     isLoading,
     playSound,
     pauseSound,
-    stopSound,
     seekTo,
     progress,
     duration,
@@ -26,25 +25,26 @@ export default function ProgramScreen() {
 
   return (
     <ThemedView className="flex-1 items-center justify-center p-4">
-      {/* Album Art */}
+      <Stack.Screen options={{ title: program.title }} />
+
       <Image
-        source={require("../../assets/images/placeholder-album.png")} // Placeholder image
+        source={require("../../assets/images/placeholder-album.png")}
         style={{ width: 300, height: 300, borderRadius: 10, marginBottom: 20 }}
       />
 
-      {/* Track Title & Artist */}
       <ThemedText className="text-2xl font-bold mb-1">
         {program.title}
       </ThemedText>
-      <ThemedText className="text-lg text-gray-600 mb-6">
-        {program.artist}
-      </ThemedText>
+      {program.artist && (
+        <ThemedText className="text-lg text-gray-600 mb-6">
+          {program.artist}
+        </ThemedText>
+      )}
 
       {isLoading ? (
         <ActivityIndicator size="large" color="#1EB1FC" />
       ) : (
         <ThemedView className="w-3/4 items-center">
-          {/* Progress Bar */}
           <Slider
             style={{ width: "100%", height: 40 }}
             minimumValue={0}
@@ -60,7 +60,6 @@ export default function ProgramScreen() {
             <ThemedText>{formatTime(duration)}</ThemedText>
           </ThemedView>
 
-          {/* Playback Controls */}
           <ThemedView className="flex-row items-center justify-center mt-6 space-x-14">
             <FontAwesome.Button
               name={isPlaying ? "pause" : "play"}
@@ -76,7 +75,6 @@ export default function ProgramScreen() {
   );
 }
 
-// Helper function to format time (mm:ss)
 function formatTime(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);

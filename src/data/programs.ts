@@ -10,14 +10,15 @@ export const programs: Program[] = [
   },
   {
     id: "2",
-    title: "Build me up buttercup",
+    title: "Build Me Up Buttercup",
+    artist: "The Foundations",
     level: "Open",
     events: [],
     file: require("../../assets/audio/Build Me Up Buttercup cut.mp3"),
   },
   {
     id: "3",
-    title: "Death approaches",
+    title: "Death Approaches",
     level: "Adult Bronze",
     events: [],
     file: require("../../assets/audio/Death Approaches.mp3"),
