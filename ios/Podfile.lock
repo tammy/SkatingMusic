@@ -1,7 +1,4 @@
 PODS:
-  - EXAV (16.0.8):
-    - ExpoModulesCore
-    - ReactCommon/turbomodule/core
   - EXConstants (56.0.15):
     - ExpoModulesCore
   - EXJSONUtils (56.0.0)
@@ -182,6 +179,8 @@ PODS:
     - ReactNativeDependencies
     - Yoga
   - ExpoAsset (56.0.14):
+    - ExpoModulesCore
+  - ExpoAudio (56.0.10):
     - ExpoModulesCore
   - ExpoDomWebView (56.0.5):
     - ExpoModulesCore
@@ -2390,7 +2389,6 @@ PODS:
   - Yoga (0.0.0)
 
 DEPENDENCIES:
-  - EXAV (from `../node_modules/expo-av/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
@@ -2400,6 +2398,7 @@ DEPENDENCIES:
   - expo-dev-menu (from `../node_modules/expo-dev-menu`)
   - expo-dev-menu-interface (from `../node_modules/expo-dev-menu-interface/ios`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoAudio (from `../node_modules/expo-audio/ios`)
   - "ExpoDomWebView (from `../node_modules/@expo/dom-webview/ios`)"
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios/ExpoFileSystem.podspec`)
   - ExpoFont (from `../node_modules/expo-font/ios/ExpoFont.podspec`)
@@ -2502,8 +2501,6 @@ DEPENDENCIES:
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 EXTERNAL SOURCES:
-  EXAV:
-    :path: "../node_modules/expo-av/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
   EXJSONUtils:
@@ -2522,6 +2519,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-dev-menu-interface/ios"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoAudio:
+    :path: "../node_modules/expo-audio/ios"
   ExpoDomWebView:
     :path: "../node_modules/@expo/dom-webview/ios"
   ExpoFileSystem:
@@ -2723,7 +2722,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  EXAV: b60fcf142fae6684d295bc28cd7cfcb3335570ea
   EXConstants: 7ad8cebfd251d7275fa2e3878ad0ad64552937e1
   EXJSONUtils: dba2755f4e24009eaf87a876b2d615ea06c16e42
   EXManifests: 7e19be8df665a338493060a419847dae76ffcd43
@@ -2733,6 +2731,7 @@ SPEC CHECKSUMS:
   expo-dev-menu: 24b9f6cf46a2a7bef98f916f04701916ee77ce67
   expo-dev-menu-interface: 65402d4affb8b418aa6cec29b3abb0e313c8f443
   ExpoAsset: 98f83c25d558707659dd6b117adcc03104dd287b
+  ExpoAudio: 4af2dd21ded0be8d1d835a97c4af0c7c8d18c0b4
   ExpoDomWebView: 27205be8754f9992913b8a9a08e65019f2207075
   ExpoFileSystem: d730a1cb33f2c91dec01561f0d710054fda32ae9
   ExpoFont: 6fe496f2be617ed4367f159f215dcc4ba27d37d6
